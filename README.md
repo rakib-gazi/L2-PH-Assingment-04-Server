@@ -1,5 +1,7 @@
 # (BookGrid ) Library Management System Backend
+
 ---
+
 **BookGrid** is a Library Management System built with Express js, TypeScript js, and MongoDB using Mongoose.
 This Backend allows managing books (Create book, Get all books with filter,sort & limit , Get single book, update & delete book), borrowing books with business rules (availability, copies, due dates), and generating borrow summaries.
 
@@ -16,6 +18,7 @@ This Backend allows managing books (Create book, Get all books with filter,sort 
 - [BookGrid Backend summary](#bookgrid-backend-summary)
 
 ---
+
 ## Features
 
 ### Book Management
@@ -43,7 +46,9 @@ This Backend allows managing books (Create book, Get all books with filter,sort 
 - Static methods.
 
 - Aggregation pipelines.
+
 ---
+
 ## Tech Stack
 
 - **Backend:** Express.js + TypeScript
@@ -53,53 +58,61 @@ This Backend allows managing books (Create book, Get all books with filter,sort 
 - **Validation:** Built-in & custom Mongoose validation (pre, post , static methods)
 
 - **Error Handling:** Structured JSON response format
+
 ---
+
 ## Installation & Setup Guideline
 
 1. **Clone the repository:**
 
-``` 
+```
 git clone https://github.com/rakib-gazi/L2-PH-Assingment-03.git
 cd L2-PH-Assingment-03
 ```
 
-
 2. **Install dependencies:**
+
 ```
 npm install
 ```
 
 3. **Configure MongoDB connection inside server.ts:**
+
 ```
 await mongoose.connect('mongodb+srv://<username>:<password>@cluster0.mongodb.net/LibraryDB');
 ```
 
 4. **Run the development server:**
+
 ```
 npm run dev
 ```
+
 ---
+
 ## Environment Variables
 
 The project uses environment variables for configuration & secret data..  
 Create a `.env` file in the root directory and set the following variables:
 
-| Variable   | Description                   | Example                   |
-|------------|-------------------------------|---------------------------|
-| PORT       | Port number for the server    | 5000                      |
-| DB_USER    | MongoDB database user         | ${process.env.DB_USER}    |
-| DB_PASSWORD| MongoDB database password     | ${process.env.DB_PASSWORD}|
-| DB_NAME    | MongoDB database name         | ${process.env.DB_NAME}    |
+| Variable    | Description                | Example                    |
+| ----------- | -------------------------- | -------------------------- |
+| PORT        | Port number for the server | 5000                       |
+| DB_USER     | MongoDB database user      | ${process.env.DB_USER}     |
+| DB_PASSWORD | MongoDB database password  | ${process.env.DB_PASSWORD} |
+| DB_NAME     | MongoDB database name      | ${process.env.DB_NAME}     |
 
 ---
-##  API Endpoints
+
+## API Endpoints
 
 ### 1.Create Book
 
-**POST** ```/api/books```  
+**POST** `/api/books`  
 Creates a new book with validation.
 
 **Request**
+
 ```
 {
     "title": "The Catcher in the Rye",
@@ -111,7 +124,9 @@ Creates a new book with validation.
     "available": true
 }
 ```
+
 **Response**
+
 ```
 {
     "success": true,
@@ -130,25 +145,34 @@ Creates a new book with validation.
     }
 }
 ```
-2. ### Get All Books
-**GET** ```/api/books```
+
+2. ### Get All Books with Pagination
+   **GET** `/api/books`
 
 Get all books wih supports filtering, and sorting.
 
-**Query:** 
-```/api/books?filter=FANTASY&sortBy=createdAt&sort=desc&limit=5```
+**Query:**
+`/api/books?filter=FANTASY&sortBy=createdAt&sort=desc&limit=5`
 
 **Query Parameters:**
+
 - **filter:** Filter by genre
 - **sortBy:** createdAT
 - **sort:** asc or desc
 - **limit:** Number of results (default: 10)
 
 **Response**
+
 ```
 {
     "success": true,
     "message": "Books retrieved successfully",
+    "pagination": {
+        "totalDocuments": 12,
+        "page": 1,
+        "limitValue": 10,
+        "totalPages": 2
+    },
     "data": [
         {
             "_id": "689f1ad63db0222989cb206e",
@@ -168,10 +192,11 @@ Get all books wih supports filtering, and sorting.
 
 3. ### Get Book by ID
 
-**GET** ```/api/books/:bookId```
+**GET** `/api/books/:bookId`
 Get single book by ID.
 
 **Response**
+
 ```
 {
     "success": true,
@@ -193,16 +218,19 @@ Get single book by ID.
 
 4. ### Update Book
 
-**PUT** ```/api/books/:bookId```
+**PUT** `/api/books/:bookId`
 Update book info with validation & business logic.
 
 **Request**
+
 ```
 {
     "copies": 10
 }
 ```
+
 **Response**
+
 ```
 {
     "success": true,
@@ -224,10 +252,11 @@ Update book info with validation & business logic.
 
 5. ### Delete Book
 
-**DELETE** ```/api/books/:bookId```
+**DELETE** `/api/books/:bookId`
 Delete book by book Id.
 
 **Response**
+
 ```
 {
     "success": true,
@@ -238,15 +267,17 @@ Delete book by book Id.
 
 6. ### Borrow a Book
 
-**POST** ```/api/borrow```
+**POST** `/api/borrow`
 Create a new borrow record with validation & business logic.
 
 **Business logic:**
+
 - Checks available copies.
 - Deducts requested quantity.
 - Marks as unavailable if stock is 0.
 
 **Request**
+
 ```
 {
   "book": "689f1a263db0222989cb2066",
@@ -254,7 +285,9 @@ Create a new borrow record with validation & business logic.
   "dueDate": "2025-09-15T11:29:42.117Z"
 }
 ```
+
 **Response**
+
 ```
 {
     "success": true,
@@ -272,16 +305,18 @@ Create a new borrow record with validation & business logic.
 
 7. ### Borrowed Books Summary
 
-**GET** ```/api/borrow```
+**GET** `/api/borrow`
 Get a list of all borrowed books summary.
 
 **Aggregation Pipeline Steps**
+
 - $group: groups borrow records by book and sums quantities.
 - $lookup: joins book details.
 - $unwind: remove array from object.
 - $project: returns only required fields.
 
 **Response**
+
 ```
 {
     "success": true,
@@ -304,10 +339,13 @@ Get a list of all borrowed books summary.
     ]
 }
 ```
+
 ---
+
 ## Error Handling
 
 Error response when validation fails:
+
 ```
 {
   "message": "Validation failed",
@@ -324,7 +362,9 @@ Error response when validation fails:
   }
 }
 ```
-Custom error  response :
+
+Custom error response :
+
 ```
 {
     "success": false,
@@ -334,7 +374,9 @@ Custom error  response :
     }
 }
 ```
-Custom Duplication error  response :
+
+Custom Duplication error response :
+
 ```
 {
     "message": "Validation failed",
@@ -359,8 +401,11 @@ Custom Duplication error  response :
     }
 }
 ```
+
 ---
+
 ## Project Structure
+
 ```
 ├──src/
 │   ├── app/
@@ -373,7 +418,7 @@ Custom Duplication error  response :
 │   │   ├── controllers/
 │   │       ├── books.controller.ts
 │   │       └── borrow.controller.ts
-│   ├── app.ts   
+│   ├── app.ts
 │   └── server.ts
 ├── .env
 ├── .gitignore
@@ -382,21 +427,24 @@ Custom Duplication error  response :
 ├── README.md
 └── tsconfig.json
 ```
+
 ## Live Demo
+
 [BookGrid Frontend](https://bookgridl2.netlify.app)
 [BookGrid Backend](https://l2-ph-assingment-04-server.vercel.app)
+
 ---
+
 ## BookGrid Backend summary
--  Clean, modular TypeScript code.
--  Proper folder structure (interfaces, models, controllers).
--  Mongoose middleware (pre/post).
--  Static methods.
--  Aggregation pipelines.
+
+- Clean, modular TypeScript code.
+- Proper folder structure (interfaces, models, controllers).
+- Mongoose middleware (pre/post).
+- Static methods.
+- Aggregation pipelines.
+
 ---
+
 # The End
+
 ---
-
-
-
-
-
