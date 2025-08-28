@@ -66,8 +66,8 @@ This Backend allows managing books (Create book, Get all books with filter,sort 
 1. **Clone the repository:**
 
 ```
-git clone https://github.com/rakib-gazi/L2-PH-Assingment-03.git
-cd L2-PH-Assingment-03
+git clone https://github.com/rakib-gazi/L2-PH-Assingment-04-Server.git
+cd L2-PH-Assingment-04-Server
 ```
 
 2. **Install dependencies:**
